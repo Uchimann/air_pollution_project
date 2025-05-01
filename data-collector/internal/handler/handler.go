@@ -8,14 +8,12 @@ import(
 )
 
 func SetRoutes(app *fiber.App) {
-	// Add "/api" prefix for all routes
 	apiRouter := app.Group("/api")
    
-	// Products routes
 	apiRouter.Post("/pollution", AddPollutionData)
 }
 
-   
+
 func AddPollutionData(ctx *fiber.Ctx) error {
 	var pollution model.PollutantDataInput
 	var err = ctx.BodyParser(&pollution)

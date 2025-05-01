@@ -5,11 +5,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/uchimann/air_pollution_project/data-collector/config"
-	"github.com/uchimann/air_pollution_project/data-collector/handler"
+	"github.com/uchimann/air_pollution_project/data-collector/internal/handler"
 	"github.com/uchimann/air_pollution_project/data-collector/internal/repository"
-	"github.com/uchimann/air_pollution_project/data-collector/model"
-	"github.com/uchimann/air_pollution_project/data-collector/repository"
 )
 
 
