@@ -1,17 +1,17 @@
 package service
 
-import(
+import (
 	"fmt"
+	"log"
 
 	"github.com/uchimann/air_pollution_project/data-collector/internal/model"
 	"github.com/uchimann/air_pollution_project/data-collector/internal/repository"
 )
 
-
 /*func AddPollutionData(ctx *fiber.Ctx) error {
 	var pollution model.PollutantDataInput
 	var err = ctx.BodyParser(&pollution)
-	
+
 	if err != nil {
 	 return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 	  "data":  nil,
@@ -23,7 +23,7 @@ import(
 
 
 	//kayıt işlemini repositoryde yapacaksın parametre olarak içeriye aldığını ve modelini göncereceksin
-	
+
 	err = repository.DB.Create(&pollution).Error
 	if err != nil {
 	 return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -38,14 +38,14 @@ import(
 	})
 }/***/
 
-
 //fonksiyon
 
 
 
 func AddPollutionData(in *model.PollutantDataInput) error {
 
-	fmt.Printf("The values of models on AddPollutionData func: %s",in.Pollutant)
+	fmt.Printf("The values of models on AddPollutionData func: %s", in.Pollutant)
+	log.Printf("The values of models on AddPollutionData func: %s", in.Pollutant)
 
 	/*if err := validateTimestamp(in.Timestamp); err != nil {
         return err  

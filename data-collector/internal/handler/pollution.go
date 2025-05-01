@@ -6,7 +6,6 @@ import(
 	"github.com/gofiber/fiber/v2"
 	"github.com/uchimann/air_pollution_project/data-collector/internal/service"
 	"github.com/uchimann/air_pollution_project/data-collector/internal/model"
-	"github.com/uchimann/air_pollution_project/data-collector/internal/repository"
 )
 
 
