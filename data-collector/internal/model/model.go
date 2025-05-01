@@ -13,7 +13,6 @@ type PollutantData struct{
 	Value		float64		
 }
 
-
 type PollutantDataInput struct{
 	Timestamp  	time.Time	`db:"timestamp" json:"timestamp"`
 	Latitude 	float64		`db:"latitude" json:"latitude"`
@@ -21,4 +20,3 @@ type PollutantDataInput struct{
 	Pollutant 	string		`db:"pollutant" json:"pollutant"`
 	Value		float64		`db:"value" json:"value"`
 }
-

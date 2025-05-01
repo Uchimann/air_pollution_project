@@ -7,10 +7,10 @@ import(
 )
 
 
-func AddPollutionData(ctx *fiber.Ctx) error {
+/*func AddPollutionData(ctx *fiber.Ctx) error {
 	var pollution model.PollutantDataInput
 	var err = ctx.BodyParser(&pollution)
-
+	
 	if err != nil {
 	 return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 	  "data":  nil,
@@ -18,6 +18,11 @@ func AddPollutionData(ctx *fiber.Ctx) error {
 	 })
 	}
 
+	//fonksiyon ekle burada aşağıda tanımla analizlerini yapacak fonksiyon olsun
+
+
+	//kayıt işlemini repositoryde yapacaksın parametre olarak içeriye aldığını ve modelini göncereceksin
+	
 	err = repository.DB.Create(&pollution).Error
 	if err != nil {
 	 return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -30,4 +35,25 @@ func AddPollutionData(ctx *fiber.Ctx) error {
 	 "data":  pollution,
 	 "error": nil,
 	})
+}/***/
+
+
+//fonksiyon
+
+
+
+func AddPollutionData(in *model.PollutantDataInput) error {
+    // 1) Analiz / validation
+    if err := validateTimestamp(in.Timestamp); err != nil {
+        return err
+    }
+    if err := validateCoordinates(in.Latitude, in.Longitude); err != nil {
+        return err
+    }
+    // … diğer iş kuralları …
+    // 2) Persist
+    if err := repository.CreatePollution(in); err != nil {
+        return fmt.Errorf("db error: %w", err)
+    }
+    return nil
 }
