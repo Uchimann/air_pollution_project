@@ -1,12 +1,10 @@
 package handler
 
 import(
-	"net/http"
-	"fmt"
 
-	"github.com/gofiber/fiber"
-	"github.com/gofiber/cors"
-
+	"github.com/gofiber/fiber/v2"
+	"github.com/uchimann/air_pollution_project/data-collector/internal/repository"
+	"github.com/uchimann/air_pollution_project/data-collector/internal/model"
 )
 
 func SetRoutes(app *fiber.App) {
@@ -14,140 +12,33 @@ func SetRoutes(app *fiber.App) {
 	apiRouter := app.Group("/api")
    
 	// Products routes
-	apiRouter.Get("/products", GetAllProducts)
-	apiRouter.Get("/products/:id", GetProductById)
-	apiRouter.Post("/products", CreateProduct)
-	apiRouter.Put("/products/:id", UpdateProduct)
-	apiRouter.Delete("/products/:id", DeleteProduct)
+	apiRouter.Post("/pollution", AddPollutionData)
 }
 
-func GetAllProducts(ctx *fiber.Ctx) error {
-	var products []model.Product
-	database.DB.Find(&products)
    
-	if len(products) == 0 {
-	 return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-	  "data":  nil,
-	  "error": "Products not found",
-	 })
-	}
-   
-	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
-	 "data":  products,
-	 "error": nil,
-	})
-   }
-   
-   
-   func GetProductById(ctx *fiber.Ctx) error {
-	var product model.Product
-	var id = ctx.Params("id")
-	database.DB.First(&product, id)
-   
-	if product.Id == 0 {
-	 return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-	  "data":  nil,
-	  "error": "Product not found",
-	 })
-	}
-   
-	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
-	 "data":  product,
-	 "error": nil,
-	})
-   }
-   
-   
-   func CreateProduct(ctx *fiber.Ctx) error {
-	var product model.Product
-	var err = ctx.BodyParser(&product)
-   
+func AddPollutionData(ctx *fiber.Ctx) error {
+	var pollution model.PollutantDataInput
+	var err = ctx.BodyParser(&pollution)
+
 	if err != nil {
 	 return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 	  "data":  nil,
 	  "error": "Invalid request",
 	 })
 	}
-   
-	err = database.DB.Create(&product).Error
+
+	err = repository.DB.Create(&pollution).Error
 	if err != nil {
 	 return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 	  "data":  nil,
 	  "error": "Create operation failed",
 	 })
 	}
-   
+
 	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
-	 "data":  product,
+	 "data":  pollution,
 	 "error": nil,
 	})
-   }
+}
    
    
-   func UpdateProduct(ctx *fiber.Ctx) error {
-	var updatedProduct model.Product
-	var err = ctx.BodyParser(&updatedProduct)
-   
-	if err != nil {
-	 return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-	  "data":  nil,
-	  "error": "Invalid request",
-	 })
-	}
-   
-	var id = ctx.Params("id")
-	var oldProduct model.Product
-	database.DB.First(&oldProduct, id)
-   
-	if oldProduct.Id == 0 {
-	 return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-	  "data":  nil,
-	  "error": "Product not found",
-	 })
-	}
-   
-	// Prevent id update
-	err = database.DB.Model(&oldProduct).Select("name", "price").Updates(model.Product{
-	 Name:  updatedProduct.Name,
-	 Price: updatedProduct.Price,
-	}).Error
-   
-	if err != nil {
-	 return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-	  "data":  nil,
-	  "error": "Update operation failed",
-	 })
-	}
-   
-	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
-	 "data":  updatedProduct,
-	 "error": nil,
-	})
-   }
-   
-   
-   func DeleteProduct(ctx *fiber.Ctx) error {
-	var product model.Product
-	var id = ctx.Params("id")
-	database.DB.First(&product, id)
-   
-	if product.Id == 0 {
-	 return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-	  "data":  nil,
-	  "error": "Product not found",
-	 })
-	}
-   
-	var err = database.DB.Delete(&product, id).Error
-	if err != nil {
-	 return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-	  "data":  nil,
-	  "error": "Delete operation failed",
-	 })
-	}
-   
-	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
-	 "data":  product,
-	 "error": nil,
-	})
-   }

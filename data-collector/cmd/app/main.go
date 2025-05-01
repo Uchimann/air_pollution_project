@@ -1,6 +1,25 @@
 package main
 
-func main(){
-	
-}
+import (
+	"log"
 
+	"github.com/gofiber/fiber/v2"
+
+	"github.com/uchimann/air_pollution_project/data-collector/config"
+	"github.com/uchimann/air_pollution_project/data-collector/handler"
+	"github.com/uchimann/air_pollution_project/data-collector/internal/repository"
+	"github.com/uchimann/air_pollution_project/data-collector/model"
+	"github.com/uchimann/air_pollution_project/data-collector/repository"
+)
+
+
+func main(){
+
+	app := fiber.New()
+	repository.StartConnection()
+	handler.SetRoutes(app)
+	err := app.Listen(":8080")
+	if err != nil {
+	 log.Fatalf("Error listen server %s", err)
+	}
+}
