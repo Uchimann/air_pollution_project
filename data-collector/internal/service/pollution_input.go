@@ -1,7 +1,8 @@
 package service
 
 import(
-	"github.com/gofiber/fiber/v2"
+	"fmt"
+
 	"github.com/uchimann/air_pollution_project/data-collector/internal/model"
 	"github.com/uchimann/air_pollution_project/data-collector/internal/repository"
 )
@@ -43,17 +44,21 @@ import(
 
 
 func AddPollutionData(in *model.PollutantDataInput) error {
-    // 1) Analiz / validation
-    if err := validateTimestamp(in.Timestamp); err != nil {
-        return err
-    }
-    if err := validateCoordinates(in.Latitude, in.Longitude); err != nil {
-        return err
-    }
-    // … diğer iş kuralları …
+
+	fmt.Printf("The values of models on AddPollutionData func: %s",in.Pollutant)
+
+	/*if err := validateTimestamp(in.Timestamp); err != nil {
+        return err  
+    }*/
+
+	if err := validatePollution(in.Pollutant); err != nil{
+		return err
+	}
+
     // 2) Persist
     if err := repository.CreatePollution(in); err != nil {
         return fmt.Errorf("db error: %w", err)
     }
     return nil
 }
+
