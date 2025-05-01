@@ -7,8 +7,8 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"github.com/uchiman/air_pollution_project/data-collector/internal/config"
-	"github.com/uchiman/air_pollution_project/data-collector/internal/model"
+	"github.com/uchimann/air_pollution_project/data-collector/internal/config"
+	"github.com/uchimann/air_pollution_project/data-collector/internal/model"
 )
 
 var DB *gorm.DB

@@ -4,7 +4,9 @@ import(
 	"net/http"
 	"fmt"
 
-	"github.com/uchiman/air_pollution_project/data-collector/internal/handler"
+	"github.com/gofiber/fiber"
+	"github.com/gofiber/cors"
+
 )
 
 func SetRoutes(app *fiber.App) {
@@ -12,11 +14,11 @@ func SetRoutes(app *fiber.App) {
 	apiRouter := app.Group("/api")
    
 	// Products routes
-	apiRouter.Get("/products", handler.GetAllProducts)
-	apiRouter.Get("/products/:id", api.GetProductById)
-	apiRouter.Post("/products", api.CreateProduct)
-	apiRouter.Put("/products/:id", api.UpdateProduct)
-	apiRouter.Delete("/products/:id", api.DeleteProduct)
+	apiRouter.Get("/products", GetAllProducts)
+	apiRouter.Get("/products/:id", GetProductById)
+	apiRouter.Post("/products", CreateProduct)
+	apiRouter.Put("/products/:id", UpdateProduct)
+	apiRouter.Delete("/products/:id", DeleteProduct)
 }
 
 func GetAllProducts(ctx *fiber.Ctx) error {
