@@ -14,7 +14,7 @@ type PollutantData struct{
 }
 
 type PollutantDataInput struct{
-	Timestamp  	time.Time	`db:"timestamp" json:"timestamp"`
+	Timestamp  	time.Time	`gorm:"autoCreateTime" json:"timestamp"`
 	Latitude 	float64		`db:"latitude" json:"latitude"`
 	Longitude	float64		`db:"longitude" json:"longitude"`
 	Pollutant 	string		`db:"pollutant" json:"pollutant"`

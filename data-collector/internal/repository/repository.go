@@ -31,6 +31,26 @@ func StartConnection() {
 
    DB = db
 
-   // Create products table
-   DB.AutoMigrate(&model.PollutantDataInput{})
+   if err := DB.Exec("CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;").Error; err != nil {
+      log.Fatalf("TimescaleDB extension error: %v", err)
+  }
+
+   /*DB.AutoMigrate(&model.PollutantDataInput{})
+
+   if err := DB.Exec("SELECT create_hypertable('pollutant_data_inputs', 'timestamp', if_not_exists => true);",
+         ).Error; err != nil {
+            log.Fatalf("Hypertable create error: %v", err)
+  }*/
+
+  if !DB.Migrator().HasTable(&model.PollutantDataInput{}) {
+      if err := DB.AutoMigrate(&model.PollutantDataInput{}); err != nil {
+         log.Fatalf("AutoMigrate error: %v", err)
+      }
+      if err := DB.Exec(
+         "SELECT create_hypertable('pollutant_data_inputs', 'timestamp', if_not_exists => true);",
+      ).Error; err != nil {
+         log.Fatalf("Hypertable create error: %v", err)
+      }
+   }
+
 }
