@@ -16,8 +16,8 @@ func validateTimestamp(ts int64) error {
 
 func validatePollution(name string) error {
 	
-	if name != "PM2.5" || name != "PM10" {
-		return ErrUnsupportedPollutant
+	if name == "PM2.5" || name == "PM10" || name == "NO2" || name == "SO2" || name == "O3"{
+		return nil
 	}
-	return nil
+	return ErrUnsupportedPollutant
 }

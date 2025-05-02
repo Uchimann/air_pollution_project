@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/uchimann/air_pollution_project/data-collector/internal/model"
 	"github.com/uchimann/air_pollution_project/data-collector/internal/repository"
@@ -43,9 +42,6 @@ import (
 
 
 func AddPollutionData(in *model.PollutantDataInput) error {
-
-	fmt.Printf("The values of models on AddPollutionData func: %s", in.Pollutant)
-	log.Printf("The values of models on AddPollutionData func: %s", in.Pollutant)
 
 	/*if err := validateTimestamp(in.Timestamp); err != nil {
         return err  
