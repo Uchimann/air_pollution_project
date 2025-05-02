@@ -45,6 +45,22 @@ services:
       DB_NAME: pollutiondb
     restart: on-failure
 
+  analyzer:
+    build:
+      context: ./analyzer
+      dockerfile: Dockerfile
+    depends_on:
+      - data-collector
+      - rabbitmq
+      - postgres
+    environment:
+      DB_USER_NAME: pollution
+      DB_PASSWORD: password
+      DB_HOST: postgres
+      DB_NAME: pollutiondb
+      RABBITMQ_HOST: rabbitmq
+    restart: on-failure
+    
 volumes:
   postgres_data:
   rabbitmq_data:
