@@ -10,6 +10,7 @@ import (
 	"github.com/uchimann/air_pollution_project/analyzer/internal/analyzer"
 	"github.com/uchimann/air_pollution_project/analyzer/internal/rabbitmq"
     "github.com/uchimann/air_pollution_project/analyzer/internal/model"
+    "github.com/uchimann/air_pollution_project/analyzer/internal/repository"
 	"gorm.io/gorm"
 )
 
@@ -71,12 +72,14 @@ func (s *AnalyzerService) processMessages() {
                 log.Printf("Error while analyzing data: %s", err)
                 continue
             }
+
+            if err := repository.SaveAnalysisResult(*AnalyzedData); err != nil {
+                log.Printf("Error while saving analysis result: %s", err)
+                continue
+            }
+
             log.Printf("Analyzed dataAAAAAAA: %+v", AnalyzedData)
-           // err := repository.SaveAnalysisResult(s.db, AnalyzedData)
-           // if err != nil {
-           //     log.Printf("Error while saving analysis result: %s", err)
-           //     continue
-           // }
+
         }
     }
     
