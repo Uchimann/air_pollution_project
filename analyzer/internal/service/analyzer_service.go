@@ -5,6 +5,7 @@ import (
 	"log"
 	"reflect"
 
+	"github.com/uchimann/air_pollution_project/analyzer/internal/analyzer"
 	"github.com/uchimann/air_pollution_project/analyzer/internal/rabbitmq"
 	"gorm.io/gorm"
 )
@@ -48,6 +49,14 @@ func (s *AnalyzerService) processMessages() {
         log.Printf("Message from RabbitMq ( Data Collector ): %s \n variable type is %s", string(data), reflect.TypeOf(data))
         
         // TODO: Burada mesajı analiz edip, gerekirse veritabanına kaydedip, notifier'a bildirim gönderebilirim
+        bool, err := analyzer.AnomalyDetection(data)
+        if err != nil {
+            log.Printf("Error while analyzing data: %s", err)
+            continue
+        }
+        if bool {
+            log.Printf("Anomaly detected in data: %s", string(data))
+        }
     }
     
     log.Println("ended of message channel")
