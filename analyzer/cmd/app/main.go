@@ -5,14 +5,14 @@ import (
     "os"
     "os/signal"
     "syscall"
-    
+
 	"github.com/uchimann/air_pollution_project/analyzer/internal/rabbitmq"
 	"github.com/uchimann/air_pollution_project/analyzer/internal/repository"
 	"github.com/uchimann/air_pollution_project/analyzer/internal/service"
 )
 
 func main() {
-    log.Println("Analyzer servisi başlatılıyor...")
+    log.Println("Analyzer service starting...")
     
     repository.StartConnection()
     
@@ -30,7 +30,6 @@ func main() {
     if err := service.StartAnalysis(); err != nil {
         log.Fatalf("Error while starting analysis: %s", err)
     }
-    log.Println("RabbitMQ'den gelen mesajı işleme başladı...")
 
 
     // Sinyal yakalama için kanal
@@ -39,6 +38,6 @@ func main() {
     
     log.Println("Press Ctrl+C to exit")
     <-sig
-    log.Println("Analyzer servisi kapatılıyor...")
+    log.Println("Analyzer service closing...")
     
 }

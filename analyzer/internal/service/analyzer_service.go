@@ -59,14 +59,14 @@ func (s *AnalyzerService) processMessages() {
             log.Printf("Error while analyzing anomaly: %s", err)
             continue
         }
-        if bool {
-            log.Printf("Anomaly detected in data: %s", string(data))
 
+        if bool {
             var rawData model.PollutantData
             if err := json.Unmarshal(data, &rawData); err != nil {
                 log.Printf("Error while unmarshalling data: %s", err)
                 continue
             }
+
             AnalyzedData, err := analyzer.AnalyzePollutionData(&rawData)
             if err != nil {
                 log.Printf("Error while analyzing data: %s", err)
@@ -78,10 +78,15 @@ func (s *AnalyzerService) processMessages() {
                 continue
             }
 
-            log.Printf("Analyzed dataAAAAAAA: %+v", AnalyzedData)
-
+            if err := s.rabbitClient.PublishAnalysisResult(*AnalyzedData); err != nil {
+                log.Printf("Error while publishing analysis result: %s", err)
+            } else {
+                log.Printf("Notification sent to notifier service for %s (Level: %s, Risk: %s)",
+                    AnalyzedData.Pollutant,
+                    AnalyzedData.AnomalyLevel,
+                    AnalyzedData.HealthRiskLevel)
+            }
         }
     }
-    
     log.Println("ended of message channel")
 }
