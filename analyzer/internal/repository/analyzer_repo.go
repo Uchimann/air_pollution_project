@@ -39,3 +39,10 @@ func StartConnection() {
 
     log.Println("Database connection established")
 }
+
+func SaveAnalysisResult(data model.PollutionAnalysis) error {
+    if err := DB.Create(&data).Error; err != nil {
+        return fmt.Errorf("error saving analysis result: %w", err)
+    }
+    return nil
+}

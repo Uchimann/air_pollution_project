@@ -5,8 +5,11 @@ import (
 	"log"
 	"reflect"
 
+    "encoding/json"
+
 	"github.com/uchimann/air_pollution_project/analyzer/internal/analyzer"
 	"github.com/uchimann/air_pollution_project/analyzer/internal/rabbitmq"
+    "github.com/uchimann/air_pollution_project/analyzer/internal/model"
 	"gorm.io/gorm"
 )
 
@@ -45,17 +48,35 @@ func (s *AnalyzerService) StartAnalysis() error {
 }
 
 func (s *AnalyzerService) processMessages() {
+
     for data := range s.messageChan {
         log.Printf("Message from RabbitMq ( Data Collector ): %s \n variable type is %s", string(data), reflect.TypeOf(data))
         
         // TODO: Burada mesajı analiz edip, gerekirse veritabanına kaydedip, notifier'a bildirim gönderebilirim
         bool, err := analyzer.AnomalyDetection(data)
         if err != nil {
-            log.Printf("Error while analyzing data: %s", err)
+            log.Printf("Error while analyzing anomaly: %s", err)
             continue
         }
         if bool {
             log.Printf("Anomaly detected in data: %s", string(data))
+
+            var rawData model.PollutantData
+            if err := json.Unmarshal(data, &rawData); err != nil {
+                log.Printf("Error while unmarshalling data: %s", err)
+                continue
+            }
+            AnalyzedData, err := analyzer.AnalyzePollutionData(&rawData)
+            if err != nil {
+                log.Printf("Error while analyzing data: %s", err)
+                continue
+            }
+            log.Printf("Analyzed dataAAAAAAA: %+v", AnalyzedData)
+           // err := repository.SaveAnalysisResult(s.db, AnalyzedData)
+           // if err != nil {
+           //     log.Printf("Error while saving analysis result: %s", err)
+           //     continue
+           // }
         }
     }
     
