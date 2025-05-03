@@ -26,24 +26,16 @@ func StartConnection() {
 
     db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
     if err != nil {
-        log.Fatalf("Database connection error: %s", err)
+        log.Fatalf("Database connection error %s", err)
     }
 
     DB = db
 
-    if err := DB.Exec("CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;").Error; err != nil {
-        log.Fatalf("TimescaleDB extension error: %v", err)
-    }
-
     if !DB.Migrator().HasTable(&model.PollutionAnalysis{}) {
         if err := DB.AutoMigrate(&model.PollutionAnalysis{}); err != nil {
-            log.Fatalf("PollutionAnalysis table cannot create: %v", err)
+            log.Fatalf("AutoMigrate error: %v", err)
         }
     }
 
-    log.Println("Database connection is succesful.")
-}
-
-func SaveAnalysis(analysis *model.PollutionAnalysis) error {
-    return DB.Create(analysis).Error
+    log.Println("Database connection established")
 }

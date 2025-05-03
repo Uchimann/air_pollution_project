@@ -1,98 +1,71 @@
 package rabbitmq
 
 import (
-    "encoding/json"
-    "fmt"
-    "log"
-
-    "github.com/streadway/amqp"
-    "github.com/uchimann/air_pollution_project/analyzer/internal/model"
-    "github.com/uchimann/air_pollution_project/analyzer/internal/service"
+	"fmt"
+	"log"
+	"github.com/streadway/amqp"
 )
 
-type Consumer struct {
-    client  *Client
-    service *service.AnalyzerService
+func (c *Client) ConsumeMessages(q amqp.Queue) (chan []byte, error) {
+	// Create a channel to receive messages
+
+	messageChan := make(chan []byte)
+	
+	msgs, err := c.ch.Consume(
+		q.Name, // queue namei de dene q.name olarak
+		"direct",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to register a consumer: %s", err)
+	}
+
+	// Wait for a message to arrive
+    go func() {
+        for msg := range msgs {
+            log.Printf("New message: %d bytes", len(msg.Body))
+            messageChan <- msg.Body
+        }
+        log.Println("RabbitMQ message channel closed")
+        close(messageChan)
+    }()
+
+	return messageChan, nil
 }
 
-func NewConsumer(client *Client, service *service.AnalyzerService) (*Consumer, error) {
-    consumer := &Consumer{
-        client:  client,
-        service: service,
-    }
-
-    queue, err := client.ch.QueueDeclare(
-        client.queueName,
+func (c *Client) ConnectQueue() (amqp.Queue, error) {
+    queueName := "analyzer_queue"
+    
+    // Kuyruk 
+    q, err := c.ch.QueueDeclare(
+        queueName,
         true,
         false,
         false,
         false,
-        nil,
+        nil, 
     )
     if err != nil {
-        return nil, fmt.Errorf("Queue cannot create: %w", err)
+        return q, err 
     }
+    
 
-    err = client.ch.QueueBind(
-        queue.Name,
-        "pollution", 
-        client.exchangeName,
+    err = c.ch.QueueBind(
+        q.Name,
+        "pollution",
+        c.exchangeName,
         false,
         nil,
     )
     if err != nil {
-        return nil, fmt.Errorf("Queue and exchange cannot connect: %w", err)
+        return q, err
     }
 
-    return consumer, nil
-}
+	log.Printf("Queue '%s' declared and bound to exchange '%s'", q.Name, c.exchangeName)
 
-func (c *Consumer) StartConsuming() error {
-    msgs, err := c.client.ch.Consume(
-        c.client.queueName,
-        "",    
-        false, 
-        false, 
-        false, 
-        false, 
-        nil,
-    )
-    if err != nil {
-        return fmt.Errorf("Cunsomer cannot start: %w", err)
-    }
-
-    forever := make(chan bool)
-
-    go func() {
-        for msg := range msgs {
-            log.Printf("New message: %s", msg.Body)
-            
-            var pollutantData model.PollutantData
-            if err := json.Unmarshal(msg.Body, &pollutantData); err != nil {
-                log.Printf("An error occured while read message: %v", err)
-                msg.Nack(false, true) 
-                continue
-            }
-
-            analysis, err := c.service.AnalyzePollutionData(&pollutantData)
-            if err != nil {
-                log.Printf("An error while data analyze: %v", err)
-                msg.Nack(false, true)
-                continue
-            }
-
-            if analysis.IsAnomalous {
-                if err := c.service.NotifyAnomaly(analysis); err != nil {
-                    log.Printf("Anomaly error: %v", err)
-                }
-            }
-
-            msg.Ack(false)
-        }
-    }()
-
-    log.Printf("RabbitMQ messages listening. Press CTRL+C'ye for exit")
-    <-forever
-
-    return nil
+	return q,nil
 }
