@@ -20,6 +20,7 @@ func main() {
     if err != nil {
         log.Fatalf("RabbitMQ connection error: %s", err)
     }
+    
     defer func() {
         if err := rabbitClient.Close(); err != nil {
             log.Printf("Error while closing RabbitMQ connection : %v", err)

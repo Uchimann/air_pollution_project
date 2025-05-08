@@ -43,7 +43,6 @@ func (s *AnalyzerService) StartAnalysis() error {
     s.messageChan = messageChan
     go s.processMessages()
 
-
     log.Println("Analyze service started, messages are prosccessing...")
     return nil
 }
