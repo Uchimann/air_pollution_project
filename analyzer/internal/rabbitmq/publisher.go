@@ -18,7 +18,7 @@ func (c *Client) PublishAnalysisResult(result model.PollutionAnalysis) error {
 
 	err = c.ch.Publish(
 		c.exchangeName,
-		"natifications",
+		"notifications",
 		false,
 		false,
 		amqp.Publishing{

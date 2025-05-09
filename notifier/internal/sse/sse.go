@@ -1,23 +1,72 @@
 package sse
 
 import (
-	"fmt"
-	"net/http"
-	"time"
+    "fmt"
+    "net/http"
+    "sync"
+    "github.com/uchimann/air_pollution_project/notifier/internal/model"
+    "encoding/json"
 )
 
-func sseHandler(w http.ResponseWriter, r *http.Request) {
-	// Set headers for SSE
-	w.Header().Set("Content-Type", "text/event-stream")
-	w.Header().Set("Cache-Control", "no-cache")
-	w.Header().Set("Connection", "keep-alive")
+type EventServer struct {
+    clients map[chan string]bool
+    mu      sync.Mutex
+}
 
-	// Send a simple message every second
-	for {
-		// Write the event data to the response
-		fmt.Fprintf(w, "data: %s\n\n", "Hello from SSE!")
-		w.(http.Flusher).Flush() // Flush the response to the client
+func NewEventServer() *EventServer {
+    return &EventServer{clients: make(map[chan string]bool)}
+}
 
-		time.Sleep(1 * time.Second) // Wait for 1 second before sending the next message
-	}
+func (es *EventServer) AddClient() chan string {
+    ch := make(chan string, 10)
+    es.mu.Lock()
+    es.clients[ch] = true
+    es.mu.Unlock()
+    return ch
+}
+
+func (es *EventServer) RemoveClient(ch chan string) {
+    es.mu.Lock()
+    delete(es.clients, ch)
+    close(ch)
+    es.mu.Unlock()
+}
+
+func (es *EventServer) Broadcast(analysis model.PollutionAnalysis) {
+    data, _ := json.Marshal(analysis)
+    msg := fmt.Sprintf("data: %s\n\n", data)
+    es.mu.Lock()
+    for ch := range es.clients {
+        select {
+        case ch <- msg:
+        default:
+        }
+    }
+    es.mu.Unlock()
+}
+
+func (es *EventServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "text/event-stream")
+    w.Header().Set("Cache-Control", "no-cache")
+    w.Header().Set("Connection", "keep-alive")
+    w.Header().Set("Access-Control-Allow-Origin", "*")
+
+    ch := es.AddClient()
+    defer es.RemoveClient(ch)
+
+    flusher, ok := w.(http.Flusher)
+    if !ok {
+        http.Error(w, "Streaming unsupported", http.StatusInternalServerError)
+        return
+    }
+
+    for {
+        select {
+        case msg := <-ch:
+            fmt.Fprint(w, msg)
+            flusher.Flush()
+        case <-r.Context().Done():
+            return
+        }
+    }
 }
