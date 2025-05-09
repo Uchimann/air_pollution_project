@@ -34,7 +34,7 @@ func (c *Client) ConsumeNotifications(es *sse.EventServer) error {
                 log.Printf("Error unmarshalling: %v", err)
                 continue
             }
-            es.Broadcast(analysis) // Sabit olarak sadece Broadcast çağrılır
+            es.Broadcast(analysis) 
         }
     }()
     return nil

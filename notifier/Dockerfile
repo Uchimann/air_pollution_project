@@ -7,6 +7,6 @@ COPY . /app
 RUN go mod download
 RUN go mod tidy
 
-EXPOSE 8080
+EXPOSE 8081
 
 CMD ["go", "run", "./cmd/app/main.go"]

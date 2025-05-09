@@ -6,6 +6,8 @@ import (
 
 type PollutionAnalysis struct {
     ID             uint      `json:"id"`
+    Latitude       float64   `json:"latitude"`
+    Longitude      float64   `json:"longitude"`
     PollutionDataID uint      `json:"pollution_data_id"`
     Timestamp       time.Time `json:"timestamp"`
     Pollutant       string    `json:"pollutant"`

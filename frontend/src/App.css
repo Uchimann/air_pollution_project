@@ -1,0 +1,55 @@
+.App {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.App-header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+}
+
+.dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 80px;
+  gap: 20px; 
+}
+
+.map-container, .chart-container, .alert-container {
+  margin: 10px;
+  padding: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+
+}
+
+.map-container {
+  width: 90%; 
+  height: 400px;
+  flex-basis: 90%;
+  padding-bottom: 80px;
+}
+
+.chart-container {
+  width: 55%; 
+  flex-basis: 55%; 
+}
+
+.alert-container {
+  width: 25%; 
+  flex-basis: 25%; 
+}
+
+@media (max-width: 768px) {
+  .map-container, .chart-container, .alert-container {
+    width: 100%;
+    flex-basis: 100%;
+  }
+  
+  .dashboard {
+    padding: 10px;
+    gap: 10px;
+  }
+}

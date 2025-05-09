@@ -68,6 +68,8 @@ func AnalyzePollutionData(data *model.PollutantData) (*model.PollutionAnalysis, 
         AnomalyLevel:   model.AnomalyLevelLow,
         HealthRiskLevel: model.HealthRiskSafe,
 		AnalysisTime: data.Timestamp,
+		Latitude: data.Latitude,
+		Longitude: data.Longitude,
     }
     
     if data.Value > thresholds.Hazardous {

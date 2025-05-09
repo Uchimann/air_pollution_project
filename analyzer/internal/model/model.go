@@ -17,6 +17,8 @@ type PollutionAnalysis struct {
     ID             uint      `gorm:"primaryKey" json:"id"`
     PollutionDataID uint      `gorm:"index" json:"pollution_data_id"`
     AnalysisTime    time.Time `gorm:"autoCreateTime" json:"timestamp"`
+    Latitude        float64   `json:"latitude"`
+    Longitude       float64   `json:"longitude"`
     Pollutant       string    `json:"pollutant"`
     Value           float64   `json:"value"`
     ThresholdValue  float64   `json:"threshold_value"`

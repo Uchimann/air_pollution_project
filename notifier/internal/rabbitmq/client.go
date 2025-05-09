@@ -32,7 +32,7 @@ func NewClient() (*Client, error) {
     if err != nil {
         return nil, err
     }
-    log.Println("RabbitMQ bağlantısı kuruldu")
+    log.Println("RabbitMQ successfully connected")
     return client, nil
 }
 
