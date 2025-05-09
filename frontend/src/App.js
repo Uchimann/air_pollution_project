@@ -52,7 +52,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Hava Kirliliği İzleme Sistemi</h1>
+        <h1>Hava Anomalileri İzleme Sistemi</h1>
       </header>
       
       <div className="dashboard">

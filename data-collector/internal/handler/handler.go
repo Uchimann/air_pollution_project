@@ -9,7 +9,6 @@ import(
 
 var rabbitClient *rabbitmq.Client
 
-// SetupDependencies handler'ların kullanacağı bağımlılıkları ayarlar
 func SetupDependencies(client *rabbitmq.Client) {
     rabbitClient = client
 }

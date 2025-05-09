@@ -57,7 +57,7 @@ func NewClient() (*Client, error) {
 func (c *Client) Close() error {
     if c.ch != nil {
         if err := c.ch.Close(); err != nil {
-            log.Printf("Error while close channel: %v", err)
+            log.Printf("Error while closing channel: %v", err)
         }
     }
     

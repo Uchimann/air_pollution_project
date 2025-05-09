@@ -21,7 +21,7 @@ func main(){
 	}
 	defer func() {
         if err := rabbitClient.Close(); err != nil {
-            log.Printf("RabbitMQ bağlantısı kapatılırken hata oluştu: %v", err)
+            log.Printf("Error while closing RabbitMQ connection: %v", err)
         }
     }()
 	

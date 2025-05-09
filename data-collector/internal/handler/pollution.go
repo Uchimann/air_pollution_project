@@ -35,7 +35,6 @@ func AddPollutionDataHandler(ctx *fiber.Ctx) error {
 }
 
 
-// determineStatus verilen hataya göre HTTP status kodunu dönecek.
 func determineStatus(err error) int {
 
     if errors.Is(err, service.ErrUnsupportedPollutant) {

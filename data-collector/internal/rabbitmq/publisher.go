@@ -68,6 +68,6 @@ func (c *Client) PublishPollutionData(data []byte) error {
         return fmt.Errorf("Mesaj yayınlanamadı: %w", err)
     }
     
-    log.Println("Mesaj başarıyla RabbitMQ'ya gönderildi")
+    log.Println("Message published to RabbitMQ")
     return nil
 }

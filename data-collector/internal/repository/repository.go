@@ -35,12 +35,6 @@ func StartConnection() {
       log.Fatalf("TimescaleDB extension error: %v", err)
   }
 
-   /*DB.AutoMigrate(&model.PollutantDataInput{})
-
-   if err := DB.Exec("SELECT create_hypertable('pollutant_data_inputs', 'timestamp', if_not_exists => true);",
-         ).Error; err != nil {
-            log.Fatalf("Hypertable create error: %v", err)
-  }*/
 
   if !DB.Migrator().HasTable(&model.PollutantDataInput{}) {
       if err := DB.AutoMigrate(&model.PollutantDataInput{}); err != nil {
