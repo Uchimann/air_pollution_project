@@ -25,7 +25,6 @@ func NewClient() (*Client, error) {
         ch:           ch,
         exchangeName: "air_pollution_data",
     }
-    // Exchange declare (idempotent)
     err = ch.ExchangeDeclare(
         client.exchangeName, "direct", true, false, false, false, nil,
     )

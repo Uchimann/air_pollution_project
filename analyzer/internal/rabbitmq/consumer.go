@@ -7,7 +7,6 @@ import (
 )
 
 func (c *Client) ConsumeMessages(q amqp.Queue) (chan []byte, error) {
-	// Create a channel to receive messages
 
 	messageChan := make(chan []byte)
 	
@@ -24,7 +23,6 @@ func (c *Client) ConsumeMessages(q amqp.Queue) (chan []byte, error) {
 		return nil, fmt.Errorf("failed to register a consumer: %s", err)
 	}
 
-	// Wait for a message to arrive
     go func() {
         for msg := range msgs {
             log.Printf("New message: %d bytes", len(msg.Body))
@@ -40,7 +38,6 @@ func (c *Client) ConsumeMessages(q amqp.Queue) (chan []byte, error) {
 func (c *Client) ConnectQueue() (amqp.Queue, error) {
     queueName := "analyzer_queue"
     
-    // Kuyruk 
     q, err := c.ch.QueueDeclare(
         queueName,
         true,

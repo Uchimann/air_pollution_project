@@ -14,6 +14,32 @@ function AlertPanel({ alerts }) {
     }
   };
 
+  const getAlertLevelInTurkish = (level) => {
+    switch (level) {
+      case 'High':
+        return 'Yüksek';
+      case 'Medium':
+        return 'Orta';
+      case 'Low':
+        return 'Düşük';
+      default:
+        return level;
+    }
+  };
+
+  const getHealthRiskInTurkish = (riskLevel) => {
+    switch (riskLevel) {
+      case 'Hazardous':
+        return 'Tehlikeli';
+      case 'Unhealthy':
+        return 'Sağlıksız';
+      case 'Moderate':
+        return 'Orta';
+      default:
+        return riskLevel;
+    }
+  };
+
   if (alerts.length === 0) {
     return (
       <div className="no-alerts">
@@ -35,9 +61,9 @@ function AlertPanel({ alerts }) {
             borderRadius: '4px'
           }}
         >
-          <h3>{alert.pollutant} - {alert.anomaly_level} Seviye Uyarı</h3>
+          <h3>{alert.pollutant} - {getAlertLevelInTurkish(alert.anomaly_level)} Seviye Uyarı</h3>
           <p>Değer: {alert.value} (Eşik: {alert.threshold_value})</p>
-          <p>Sağlık Riski: {alert.health_risk_level}</p>
+          <p>Sağlık Riski: {getHealthRiskInTurkish(alert.health_risk_level)}</p>
           <p>Zaman: {new Date(alert.timestamp).toLocaleString()}</p>
         </div>
       ))}

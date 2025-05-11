@@ -19,35 +19,15 @@ func AnomalyDetection(data []byte) (bool, error) {
 	thresholds := model.PollutantThresholds[pollutantData.Pollutant]
 
 	isAnomaly := false
-	//var riskLevel string
 
 	if pollutantData.Value > thresholds.Hazardous {
 		isAnomaly = true
-		//riskLevel = model.HealthRiskHazardous
-		//log.Printf("DANGEROUS LEVEL ANOMALY: %s = %.2f (threshold: %.2f)", 
-		//	pollutantData.Pollutant, 
-		//	pollutantData.Value, 
-		//	thresholds.Hazardous)
 	} else if pollutantData.Value > thresholds.Unhealthy {
 		isAnomaly = true
-		//riskLevel = model.HealthRiskUnhealthy
-		//log.Printf("UNHEALTHY LEVEL ANOMALY: %s = %.2f (threshold: %.2f)",
-		//	pollutantData.Pollutant,
-		//	pollutantData.Value,
-		//	thresholds.Unhealthy)
 	} else if pollutantData.Value > thresholds.Moderate {
 		isAnomaly = true
-		//riskLevel = model.HealthRiskModerate
-		//log.Printf("MODERATE LEVEL ANOMALY: %s = %.2f (threshold: %.2f)",
-		//	pollutantData.Pollutant,
-		//	pollutantData.Value,
-		//	thresholds.Moderate)
 	} else {
-		//riskLevel = model.HealthRiskSafe
-		//log.Printf("SAFE LEVEL: %s = %.2f (threshold: %.2f)",
-		//	pollutantData.Pollutant,
-		//	pollutantData.Value,
-		//	thresholds.Moderate)
+
 	}		
 
 	return isAnomaly, nil

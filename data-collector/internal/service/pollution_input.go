@@ -10,9 +10,7 @@ import (
 
 func AddPollutionData(in *model.PollutantDataInput) error {
 
-	/*if err := validateTimestamp(in.Timestamp); err != nil {
-        return err  
-    }*/
+
 	if in.Timestamp.IsZero() {
         in.Timestamp = time.Now()
     }
@@ -21,7 +19,6 @@ func AddPollutionData(in *model.PollutantDataInput) error {
 		return err
 	}
 
-    // 2) Persist
     if err := repository.CreatePollution(in); err != nil {
         return fmt.Errorf("db error: %w", err)
     }

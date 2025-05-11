@@ -5,7 +5,6 @@ import AlertPanel from './components/AlertPanel';
 import './App.css';
 
 function App() {
-  // localStorage'dan verileri yüklemeyi deneyin
   const [pollutionData, setPollutionData] = useState(() => {
     const savedData = localStorage.getItem('pollutionData');
     return savedData ? JSON.parse(savedData) : [];
@@ -17,12 +16,10 @@ function App() {
   });
 
   useEffect(() => {
-    // pollutionData güncellendiğinde localStorage'a kaydet
     localStorage.setItem('pollutionData', JSON.stringify(pollutionData));
   }, [pollutionData]);
 
   useEffect(() => {
-    // alerts güncellendiğinde localStorage'a kaydet
     localStorage.setItem('alerts', JSON.stringify(alerts));
   }, [alerts]);
   
@@ -68,6 +65,7 @@ function App() {
         
         <div className="alert-container">
           <h2>Uyarılar</h2>
+          <p>Son 10 uyarı gösterilmektedir</p>
           <AlertPanel alerts={alerts} />
         </div>
       </div>

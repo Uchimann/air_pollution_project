@@ -35,11 +35,21 @@
 .chart-container {
   width: 55%; 
   flex-basis: 55%; 
+  max-height: fit-content;
 }
 
 .alert-container {
   width: 25%; 
   flex-basis: 25%; 
+}
+
+.alert-item p {
+    padding-bottom: 5px;
+    line-height: 0px;
+}
+
+.alert-item h3 {
+    margin-top: 2px;
 }
 
 @media (max-width: 768px) {
