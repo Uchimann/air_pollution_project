@@ -42,6 +42,7 @@ Bu proje, modern bir microservice mimarisi kullanarak geliştirilmiştir ve üç
    - Anomali tespit edildiğinde, Analyzer sonuçları RabbitMQ üzerinden Notifier servisine gönderir
    - Notifier servisi, SSE ile frontend'e gerçek zamanlı bildirim gönderir
    - Frontend harita ve uyarı panelini günceller
+![Screenshot_49](https://github.com/user-attachments/assets/8af87acb-bfed-40a1-80d8-6c20bf57a36a)
 
 [Excalidraw](https://excalidraw.com/#json=iAGSXPdfYvJ6wuQgzg_C4,ywCkswDoKXX247J4h0vN8w)
 
